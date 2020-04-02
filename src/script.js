@@ -74,7 +74,7 @@ class VirtualKeyboard {
     btn.classList.add("keyboard--btn", obj.name);
     if (obj.classes) btn.classList.add(obj.classes);
 
-    let output = !obj.value ? `<span>${obj.name}</span>` :
+    let output = !obj.classes ? `<span>${obj.value}</span>` :
       `<span class="ru">
           <span class="caseDown ${localStorage.keyboardLanguage === "ru" ? "" : "hidden"}">${obj.value.ru.caseDown}</span>
           <span class="caseUp hidden">${obj.value.ru.caseUp}</span>
@@ -122,12 +122,17 @@ class VirtualKeyboard {
         // }
         this.toggleCappslock(true);
       } else {
-        if (this.pressed.has("ShiftLeft") && this.pressed.has("AltLeft")) {
+        if (event.code === "ControlLeft" || event.code === "AltLeft") {
           for (let code of this.codes) {
             if (!this.pressed.has(code)) {
               return;
             }
-            pressed.clear();
+            this.pressed.delete("ControlLeft");
+            // document.querySelector("ControlLeft").classList.remove('active');
+            this.pressed.delete("AltLeft");
+            // document.querySelector("AltLeft").classList.remove('active');
+            this.switchLanguage();
+            console.log(localStorage.keyboardLanguage);
           }
         }
       }
@@ -138,7 +143,7 @@ class VirtualKeyboard {
   handleButtonUp(event) {
     console.log(event.code);
     let clickedButton = document.querySelector(`.${event.code}`);
-    if (this.pressed.has(event.code) && event.code !== "CapsLock") {
+    if (this.pressed.has(event.code) && event.code !== "CapsLock" && event.code !== "ControlLeft" && event.code !== "AltLeft") {
       this.pressed.delete(event.code);
       clickedButton.classList.toggle('active');
     }
@@ -216,28 +221,61 @@ let lid =
   [
     {
       name: "Tab",
+      value: "Tab"
+    }
+  ],
+  [
+    {
+      name: "CapsLock",
+      value: "CapsLock"
+    },
+    {
+      name: "KeyA",
       value: {
         ru: {
-          caseDown: "Tab",
-          caseUp: "Tab"
+          caseDown: "ф",
+          caseUp: "Ф"
         },
         en: {
-          caseDown: "Tab",
-          caseUp: "Tab"
+          caseDown: "a",
+          caseUp: "A"
         }
+      }, classes: "symbol"
+    }
+  ],
+  [
+    {
+      name: "ShiftLeft",
+      value: "Shift"
+    },
+    {
+      name: "KeyZ",
+      value: {
+        ru: {
+          caseDown: "я",
+          caseUp: "Я"
+        },
+        en: {
+          caseDown: "z",
+          caseUp: "Z"
+        }
+      }, classes: "symbol"
+    }
+  ],
+    [
+      {
+        name: "ControlLeft",
+        value: "Ctrl"
+      },
+      {
+        name: "MetaLeft",
+        value: "Win"
+      },
+      {
+        name: "AltLeft",
+        value: "Alt"
       }
-    }
-  ],
-  [
-    {
-      name: "CapsLock"
-    }
-  ],
-  [
-    {
-      name: "ShiftLeft"
-    }
-  ]
+    ]
 ];
 
 window.onload = function() {
