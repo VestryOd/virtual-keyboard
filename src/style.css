@@ -39,7 +39,7 @@ body {
   height: 200px;
   margin: 10px auto 10px;
   padding: 10px;
-  font-size: 1.2em;
+  font-size: 1em;
   color: #444444;
 }
 
@@ -67,7 +67,7 @@ body {
   background-color: #afafaf;
   color: #ffffff;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .keyboard--btn:hover {
@@ -77,7 +77,7 @@ body {
 }
 
 .keyboard .keyboard--row > :not(.symbol) {
-  background-color: #636363;
+  background-color: #808080;
   font-style: bold;
 }
 
