@@ -2,18 +2,20 @@ class VirtualKeyboard {
   constructor(props) {
     this.data = props.data;
     this.selector = props.selector;
-    this.rootElement, this.keyBoard, this.textArea, this.header, this.pressed, this.keys, this.letters;
+    this.rootElement, this.keyBoard, this.textArea, this.header, this.pressed, this.keys, this.letters, this.mouseClicked;
     this.defaultSet = {};
     this.codes = ["ControlLeft", "AltLeft"];
     this.capslocked = false;
   }
 
-  getRootElement() {
-    this.rootElement = document.querySelector(this.selector);
+  setRootElement() {
+    this.rootElement = document.createElement('div');
+    this.rootElement.classList.add('main');
+    document.body.prepend(this.rootElement);
   }
   ///////////////////////////////////////////////////////////////
   generateHeader() {
-    if (!this.rootElement) this.getRootElement();
+    if (!this.rootElement) this.setRootElement();
     this.header = document.createElement('div');
     this.header.classList.add('header-wrapper');
     this.header.innerHTML = `
@@ -24,7 +26,7 @@ class VirtualKeyboard {
   }
 
   generateTextArea() {
-    if (!this.rootElement) this.getRootElement();
+    if (!this.rootElement) this.setRootElement();
     let textArea = document.createElement('div');
     textArea = document.createElement('div');
     textArea.classList.add('textarea-wrapper');
@@ -36,7 +38,7 @@ class VirtualKeyboard {
   }
 
   generateKeyboard() {
-    if (!this.rootElement) this.getRootElement();
+    if (!this.rootElement) this.setRootElement();
 
     const rows = this.data;
 
@@ -46,14 +48,21 @@ class VirtualKeyboard {
       this.keyBoard.append(this.generateKeyboardRow(elem));
     });
     this.rootElement.append(this.keyBoard);
+    this.keyBoard = document.querySelector('.keyboard');
     this.keys = document.querySelectorAll('.symbol');
 
     this.pressed = new Set();
     document.addEventListener("keydown", (event) => {
-      this.handleButtonDown(event)
+      this.handleButtonDown(event.code)
     });
     document.addEventListener("keyup", (event) => {
-      this.handleButtonUp(event);
+      this.handleButtonUp(event.code);
+    });
+    this.keyBoard.addEventListener("mousedown", (event) => {
+      this.handleKeyboardMousedown(event);
+    });
+    this.keyBoard.addEventListener("mouseup", () => {
+      this.handleKeyboardMouseup(this.mouseClicked);
     });
   }
   ///////////////////////////////////////////////////////////////
@@ -72,7 +81,11 @@ class VirtualKeyboard {
   generateKeyboardButton(obj) {
     let btn = document.createElement('div');
     btn.classList.add("keyboard--btn", obj.className);
-    if (obj.symbol) btn.classList.add("symbol");
+    if (obj.symbol) {
+      btn.classList.add("symbol");
+      let current = localStorage.keyboardLanguage === "ru" ? obj.ru.down : obj.en.down;
+      btn.dataset.value = current;
+    };
 
     let output = !obj.symbol ? `<span>${obj.value}</span>` :
       `<span class="ru ${localStorage.keyboardLanguage === "ru" ? "" : "hidden"}">
@@ -103,46 +116,41 @@ class VirtualKeyboard {
     for (let key of this.keys) {
       let items = key.children;
       Array.from(items).forEach(el => {
-        el.classList.contains(localStorage.keyboardLanguage) ? el.classList.remove('hidden') : el.classList.add('hidden');
+        if (el.classList.contains(localStorage.keyboardLanguage)) {
+          el.classList.remove('hidden');
+          this.toggleClassesInButton(key, "caseDown");
+        } else {
+          el.classList.add('hidden');
+        }
       });
     }
   }
 
-  handleButtonDown(event) {
+  handleButtonDown(eventCode) {
     // console.log(event);
-    let clickedButton = document.querySelector(`.${event.code}`);
-    if (event.code === "CapsLock") {
+    let clickedButton = document.querySelector(`.${eventCode}`);
+    if (eventCode === "CapsLock") {
       clickedButton.classList.toggle('active');
       this.capslocked = !this.capslocked;
       this.toggleCappslock();
       return;
     }
-    if (!this.pressed.has(event.code)) {
-      this.pressed.add(event.code);
+    if (!this.pressed.has(eventCode)) {
+      this.pressed.add(eventCode);
       clickedButton.classList.toggle('active');
     }
 
     if (clickedButton.classList.contains('symbol')) {
-      this.textArea.value += event.key;
+      this.textArea.value += clickedButton.dataset.value;
     } else {
-      if (event.code === "ShiftRight" || event.code === "ShiftLeft") {
-        console.log('inside of Shift');
-        // for (let key of this.keys) {
-        //   this.toggleClassesInButton(key, "caseUp");
-        // }
-        // this.toggleCappslock(true);
+      if (eventCode === "ShiftRight" || eventCode === "ShiftLeft") {
         this.toggleShift();
       } else {
-        if (event.code === "ControlLeft" || event.code === "AltLeft") {
+        if (eventCode === "ControlLeft" || eventCode === "AltLeft") {
           for (let code of this.codes) {
             if (!this.pressed.has(code)) {
               return;
             }
-            // this.pressed.delete("ControlLeft");
-            // document.querySelector("ControlLeft").classList.remove('active');
-            // this.pressed.delete("AltLeft");
-            // document.querySelector("AltLeft").classList.remove('active');
-            // this.pressed.clear();
             this.switchLanguage();
             console.log(localStorage.keyboardLanguage);
           }
@@ -152,19 +160,36 @@ class VirtualKeyboard {
 
   }
 
-  handleButtonUp(event) {
-    console.log(event.code);
+  handleButtonUp(eventCode) {
+    console.log(eventCode);
     // let clickedButton = document.querySelector(`.${event.code}`);
-    if (this.pressed.has(event.code) && event.code !== "CapsLock") {
+    if (this.pressed.has(eventCode) && eventCode !== "CapsLock") {
       // this.pressed.get()
-      this.pressed.delete(event.code);
-      document.querySelector(`.${event.code}`).classList.toggle('active');
+      this.pressed.delete(eventCode);
+      document.querySelector(`.${eventCode}`).classList.toggle('active');
     }
 
 
-    if (event.code === "ShiftRight" || event.code === "ShiftLeft") {
+    if (eventCode === "ShiftRight" || eventCode === "ShiftLeft") {
       this.toggleCappslock();
     }
+  }
+
+  handleKeyboardMousedown(event) {
+    this.mouseClicked = this.defineClickElement(event);
+    this.handleButtonDown(this.mouseClicked);
+    // console.log(event.code);
+  }
+
+  handleKeyboardMouseup(eventCode) {
+    console.log('Mouseup');
+    this.handleButtonUp(eventCode);
+  }
+
+  defineClickElement(event) {
+    let eventElement = event.target.tagName === "SPAN" ? event.target.parentElement : event.target;
+    eventElement = eventElement.tagName === "SPAN" ? eventElement.parentElement : eventElement;
+    return eventElement.className.split(' ').filter(el => el !== 'keyboard--btn' && el !== 'symbol')[0];
   }
 
   toggleClassesInButton(btn, className) {
@@ -173,7 +198,13 @@ class VirtualKeyboard {
       if (elem.classList.contains(localStorage.keyboardLanguage)) {
         Array.from(elem.children).forEach(el => {
           // console.log(el);
-          el.classList.contains(className) ? el.classList.remove('hidden') : el.classList.add('hidden');
+          // el.classList.contains(className) ? el.classList.remove('hidden') : el.classList.add('hidden');
+          if (el.classList.contains(className)) {
+            el.classList.remove('hidden');
+            btn.dataset.value = el.innerHTML;
+          } else {
+             el.classList.add('hidden');
+          }
         })
       }
     });
@@ -266,7 +297,7 @@ let symbols =
       { className: "ControlLeft", value: "Ctrl", symbol: false },
       { className: "MetaLeft", value: "Win", symbol: false },
       { className: "AltLeft", value: "Alt", symbol: false },
-      { className: "Space", value: "Space", symbol: false },
+      { className: "Space", value: "", symbol: false },
       { className: "AltRight", value: "Alt", symbol: false },
       { className: "ArrowLeft", value: "◄", symbol: false },
       { className: "ArrowDown", value: "▼", symbol: false },
