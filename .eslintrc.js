@@ -12,7 +12,7 @@ module.exports = {
     "ecmaVersion": 2018
   },
   "rules": {
-    /*"accessor-pairs": "error",
+    "accessor-pairs": "error",
     "array-bracket-newline": "error",
     "array-bracket-spacing": "error",
     "array-callback-return": "error",
@@ -235,6 +235,6 @@ module.exports = {
     "wrap-iife": "error",
     "wrap-regex": "error",
     "yield-star-spacing": "error",
-    "yoda": "error"*/
+    "yoda": "error"
   }
 };
