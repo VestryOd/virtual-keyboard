@@ -142,6 +142,7 @@ class VirtualKeyboard {
     })
 
     document.addEventListener("keydown", (event) => {
+      if (event.code === "F5") return;
       event.preventDefault();
       this.handleButtonDown(event.code)
     });
@@ -158,7 +159,7 @@ class VirtualKeyboard {
   }
   ///////////////////////////////////////////////////////////////
   generateKeyboardRow(array) {
-    if (localStorage.keyboardLanguage === null) {
+    if (localStorage.keyboardLanguage !== "ru" && localStorage.keyboardLanguage !== "en") {
       localStorage.keyboardLanguage = "ru";
     }
     let row = document.createElement('div');
@@ -335,6 +336,7 @@ class VirtualKeyboard {
 
   handleKeyboardMouseup(eventCode) {
     this.handleButtonUp(eventCode);
+    this.textArea.focus();
   }
 
   getCaretPosition() {
