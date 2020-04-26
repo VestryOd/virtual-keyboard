@@ -51,12 +51,9 @@ class VirtualKeyboard {
       this.keyBoard.append(this.generateKeyboardRow(elem));
     });
     this.rootElement.append(this.keyBoard);
-    this.keyBoard = document.querySelector('.keyboard');
-    this.keys = document.querySelectorAll('.symbol');
-    this.languageButton = document.querySelector('.ContextMenu span');
+  }
 
-    this.pressedButtons = new Set();
-
+  addListeners() {
     this.textArea.addEventListener('click', () => {
       this.currentPosition = this.getCaretPosition();
     });
@@ -122,6 +119,10 @@ class VirtualKeyboard {
     this.generateHeader();
     this.generateTextArea();
     this.generateKeyboard();
+    this.pressedButtons = new Set();
+    this.keys = document.querySelectorAll('.symbol');
+    this.languageButton = document.querySelector('.ContextMenu span');
+    this.addListeners();
   }
 
   removeKeyboardInstance() {
