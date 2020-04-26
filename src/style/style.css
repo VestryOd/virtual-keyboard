@@ -80,12 +80,12 @@ body {
   background-color: #34bdd1;
 }
 
-.keyboard .keyboard--row > :not(.symbol) {
+.keyboard--row > :not(.symbol) {
   background-color: #808080;
   font-style: bold;
 }
 
-.keyboard .keyboard--row > :not(.symbol):hover {
+.keyboard--row > :not(.symbol):hover {
   background-color: #34bdd1;
 }
 
@@ -120,20 +120,8 @@ body {
 .keyboard .keyboard--row .active {
   background-color: #34bdd1;
   border-radius: 50px;
-  /* animation: pulse 0.7s ease-out;
-  transform: scale(0); */
 }
 
 .hidden {
   display: none;
 }
-
-/* In case of use Wave effect in buttons */
-
-/* @keyframes pulse {
-  to {
-    transform: scale(2);
-    background-color: #ffffff;
-    opacity: 0;
-  }
-} */
