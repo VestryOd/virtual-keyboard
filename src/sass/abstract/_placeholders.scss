@@ -1,0 +1,25 @@
+%transition {
+  transition: all 0.5s ease-out;
+}
+
+%font-primary {
+  font-family: "Open Sans", "Verdana", sans-serif;
+}
+
+%font-header {
+  font-family: "Raleway", "Verdana", sans-serif;
+}
+
+%background-image {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+%thin-text-shadow {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+%box-shadow-bold {
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.6);
+}

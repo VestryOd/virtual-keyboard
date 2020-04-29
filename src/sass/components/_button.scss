@@ -1,0 +1,72 @@
+.keyboard__key {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  margin: 2px;
+  padding: 5px;
+  outline: transparent;
+  border-width: 0;
+  border-bottom: 1px solid $color-key-border;
+  border-radius: 5px;
+  font-size: 1.6rem;
+  background-color: $color-light;
+  color: $color-key-font;
+  cursor: pointer;
+  box-shadow: 0 0 3px -1px rgba(0, 0, 0, 0.3);
+  @extend %transition;
+}
+
+.keyboard__key:hover {
+  background-color: $color-key-hover;
+}
+
+.keyboard__key:active,
+.keyboard__key:focus {
+  background-color: $color-key-active;
+}
+
+.special {
+  font-size: 1.4rem;
+}
+
+.tab,
+.backspace,
+.capsLock {
+  width: 100px;
+}
+
+.shiftRight {
+  width: 110px;
+}
+
+.enter {
+  width: 90px;
+}
+
+.space {
+  width: 360px;
+}
+
+.shiftLeft {
+  width: 75px;
+}
+
+.controlRight {
+  width: 50px;
+}
+
+.metaLeft,
+.contextMenu {
+  @extend %background-image;
+  background-size: 20px;
+}
+
+.metaLeft {
+  background-image: url("/assets/img/windows.svg");
+}
+
+.contextMenu {
+  background-image: url("/assets/img/globe.svg");
+}

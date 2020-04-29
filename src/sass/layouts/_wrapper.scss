@@ -1,0 +1,14 @@
+.header__wrapper {
+  width: 100%;
+  margin: 10px auto;
+  text-align: center;
+}
+
+.description__wrapper {
+  padding: 10px 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $color-header-info;
+}

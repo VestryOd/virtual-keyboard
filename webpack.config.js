@@ -34,7 +34,6 @@ module.exports = (env, options) => {
       }),
       new CopyPlugin([
         { from: './src/img', to: 'assets/img' },
-        { from: './src/audio', to: 'assets/audio' }
       ]),
       ...(isProduction ? [new CleanWebpackPlugin()] : [])
     ],

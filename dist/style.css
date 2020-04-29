@@ -100,7 +100,8 @@ a {
  * Improve readability of focused elements when they are also in an
  * active/hover state.
  */
-a:active, a:hover {
+a:active,
+a:hover {
   outline: 0;
 }
 
@@ -141,8 +142,8 @@ h1 {
  * Addresses styling not present in IE 8/9.
  */
 mark {
-  background: #ff0;
-  color: #000;
+  background: #ffff00;
+  color: #000000;
 }
 
 /**
@@ -220,7 +221,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: monospace, monospace;
+  font-family: monospace;
   font-size: 1em;
 }
 
@@ -416,3 +417,259 @@ ul {
 * {
   box-sizing: border-box;
 }
+
+.keyboard__key, .info__lang-switch {
+  transition: all 0.5s ease-out;
+}
+
+.header {
+  font-family: "Raleway", "Verdana", sans-serif;
+}
+
+.metaLeft,
+.contextMenu {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.info__lang-switch:hover, .info__lang-switch, .info, .header {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.keyboard {
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.6);
+}
+
+html {
+  font-size: 10px;
+}
+
+body {
+  box-sizing: border-box;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 2.6rem;
+  font-family: "Open Sans", "Verdana", sans-serif;
+}
+
+.main {
+  width: 100%;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 960px;
+  margin: 0 auto;
+}
+
+.header__wrapper {
+  width: 100%;
+  margin: 10px auto;
+  text-align: center;
+}
+
+.description__wrapper {
+  padding: 10px 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(212, 212, 212, 0.7);
+}
+
+.header {
+  color: rgba(212, 212, 212, 0.904);
+  font-size: 2.2em;
+  font-weight: 600;
+}
+
+.info {
+  color: #ffffff;
+  font-size: 1.2em;
+  line-height: 1em;
+  margin: 10px 0;
+}
+
+.info__lang-switch {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  outline: transparent;
+  color: #ffffff;
+  background-color: rgba(97, 227, 231, 0.705);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.info__lang-switch:hover {
+  background-color: #61e3e7;
+}
+
+.info__lang-switch:active,
+.info__lang-switch:focus {
+  border-color: #ffffff;
+}
+
+.textarea {
+  display: block;
+  margin: 10px auto;
+  border-color: transparent;
+  outline: transparent;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+  height: 200px;
+  overflow-y: auto;
+  resize: none;
+  font-size: 1em;
+  background-color: -internal-light-dark-color(white, black);
+  color: #444444;
+  outline: transparent;
+  transition: all 0.3s ease;
+}
+
+.textarea:focus {
+  outline-color: #bbe8f0;
+  box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+
+.keyboard {
+  width: 100%;
+  height: 300px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #cecece;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.keyboard__key {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  margin: 2px;
+  padding: 5px;
+  outline: transparent;
+  border-width: 0;
+  border-bottom: 1px solid #9b9b9b;
+  border-radius: 5px;
+  font-size: 1.6rem;
+  background-color: #ffffff;
+  color: #333333;
+  cursor: pointer;
+  box-shadow: 0 0 3px -1px rgba(0, 0, 0, 0.3);
+}
+
+.keyboard__key:hover {
+  background-color: #dfdfdf;
+}
+
+.keyboard__key:active,
+.keyboard__key:focus {
+  background-color: #80c1d1;
+}
+
+.special {
+  font-size: 1.4rem;
+}
+
+.tab,
+.backspace,
+.capsLock {
+  width: 100px;
+}
+
+.shiftRight {
+  width: 110px;
+}
+
+.enter {
+  width: 90px;
+}
+
+.space {
+  width: 360px;
+}
+
+.shiftLeft {
+  width: 75px;
+}
+
+.controlRight {
+  width: 50px;
+}
+
+.metaLeft,
+.contextMenu {
+  background-size: 20px;
+}
+
+.metaLeft {
+  background-image: url("/assets/img/windows.svg");
+}
+
+.contextMenu {
+  background-image: url("/assets/img/globe.svg");
+}
+
+.motion-colors {
+  background: linear-gradient(270deg, #8364b7, #3096db, #90bbdd, #bae1ea);
+  background-size: 800% 800%;
+  -webkit-animation: motion-gradient 29s ease infinite;
+  -moz-animation: motion-gradient 29s ease infinite;
+  -o-animation: motion-gradient 29s ease infinite;
+  animation: motion-gradient 29s ease infinite;
+}
+
+@-webkit-keyframes motion-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-moz-keyframes motion-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-o-keyframes motion-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes motion-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/*# sourceMappingURL=style.css.map*/
