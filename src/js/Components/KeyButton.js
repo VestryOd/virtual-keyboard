@@ -40,7 +40,11 @@ export class KeyButton {
   }
 
   renderSymbolContent() {
-    this.case = this.case === null ? 'down' : this.checkCase();
+    if (this.case === null) {
+      this.case = 'down';
+    } else {
+      this.checkCase();
+    }
     this.keyButton.innerHTML = this[this.lang][this.case];
   }
 

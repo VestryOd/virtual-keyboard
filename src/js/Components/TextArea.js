@@ -18,7 +18,11 @@ export class TextArea {
 
   changeValue(value) {
     let current = this.textArea.value;
-    current += value;
+    if (value === '&amp;') {
+      current += '&';
+    } else {
+      current += value;
+    }
     this.textArea.value = current;
   }
 

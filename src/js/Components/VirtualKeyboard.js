@@ -2,8 +2,6 @@ import createDomNode from "../createDomNode";
 import { Header } from "./Header";
 import { TextArea } from "./TextArea";
 import { KeyButton } from "./KeyButton";
-// import handleKeyDown from "../handlers/handleKeyDown";
-// import handleButtonUp from "../handlers/handleKeyUp";
 /* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
 /* eslint-disable class-methods-use-this */
@@ -13,23 +11,18 @@ export class VirtualKeyboard {
     this.exceptions = exceptions;
     this.data = null;
     this.letters = [];
-    this.signs = [];
     this.digits = [];
     this.rootElement = null;
     this.keyBoard = null;
     this.textArea = null;
     this.header = null;
-    this.languageButton = null;
-    this.mouseClicked = null;
     this.pressedButtons = null;
-    this.currentPosition = null;
-    this.shifted = null;
-    this.capslocked = null;
+    this.capslocked = false;
     this.keyboardIsCreated = false;
   }
 
   setRootElement() {
-    const main = createDomNode(main, 'div', 'main', 'motion-colors');
+    const main = createDomNode(main, 'div', 'main');
     this.rootElement = createDomNode(this.rootElement, 'div', 'container');
     main.append(this.rootElement);
     document.body.prepend(main);
@@ -57,9 +50,9 @@ export class VirtualKeyboard {
     const data = this.defaultSet;
     this.keyBoard = createDomNode(this.keyBoard, 'div', 'keyboard');
     data.forEach((elem) => {
-      let keyButton = new KeyButton(elem).makeKeyButton();
+      let keyButton = new KeyButton(elem);
       this.checkKeyObjectForClasses(elem, keyButton);
-      this.keyBoard.append(keyButton);
+      this.keyBoard.append(keyButton.makeKeyButton());
     });
     this.rootElement.append(this.keyBoard);
   }
@@ -68,65 +61,10 @@ export class VirtualKeyboard {
     return this.exceptions.includes(code);
   }
 
-  // checkDown(btn) {
-  //   if (btn.classList.includes('special')) {
-  //     this.handleSymbolDown(btn);
-  //   } else {
-  //     this.handleSpecialDown(btn);
-  //   }
-  // }
-
-  // handleSymbolDown(btn) {
-  //   const value = btn.innerHTML;
-  //   this.textAreaChangeInfo(value);
-  // }
-
-  // handleButtonDown(e) {
-  //   const button = e.taget;
-  //   const keyCode = button.dataset.code;
-  //   if (!this.pressedButtons.has(keyCode)) {
-  //     this.pressedButtons.add(keyCode);
-  //     button.classList.toggle('active');
-  //   }
-  //   this.checkDown(button);
-  // }
-
-  // textAreaChangeInfo(value) {
-  //   const text = this.textArea.value;
-  //   this.textArea.focus();
-  //   if (value === '&amp;') {
-  //     this.textArea.setRangeText('&', this.textArea.selectionStart, this.textArea.selectionEnd, 'end');
-  //   } else if (value === 'Backspace') {
-  //     if (this.currentPosition) {
-  //       this.textArea.value = text.slice(0, this.currentPosition - 1) + text.slice(this.currentPosition, text.length);
-  //       this.textArea.setRangeText('', this.currentPosition, this.currentPosition, 'end');
-  //     } else {
-  //       this.textArea.value = text.slice(0, -1);
-  //     }
-  //   } else if (value === 'Delete') {
-  //     this.textArea.value = text.slice(0, this.currentPosition) + text.slice(this.currentPosition + 1, text.length);
-  //     this.textArea.setRangeText('', this.currentPosition, this.currentPosition, 'end');
-  //   } else {
-  //     this.textArea.setRangeText(value, this.textArea.selectionStart, this.textArea.selectionEnd, 'end');
-  //   }
-  // }
-
-
-
-  // handleButtonUp(e) {
-  //   const button = e.taget;
-  //   const keyCode = button.dataset.code;
-  //   this.checkForSwitchLang();
-  //   if (this.pressedButtons.has(keyCode) && keyCode !== 'CapsLock') {
-  //     this.pressedButtons.delete(keyCode);
-  //     button.classList.toggle('active');
-  //   }
-  // }
-
-  // checkForSwitchLang() {
-  //   const conditionToSwitch = this.pressedButtons.has('ShiftLeft') && this.pressedButtons.has('AltLeft');
-  //   if (conditionToSwitch) this.switchLanguage();
-  // }
+  checkForSwitchLang() {
+    const conditionToSwitch = this.pressedButtons.has('ControlLeft') && this.pressedButtons.has('AltLeft');
+    if (conditionToSwitch) this.switchLanguage();
+  }
 
   handleSymbolDown(target) {
     const value = target.innerHTML;
@@ -148,13 +86,13 @@ export class VirtualKeyboard {
     if (!this.pressedButtons.has(code)) {
       this.pressedButtons.add(code);
       this.toggleActiveClass(key);
-      // this.checkForSwitchLang(eventCode);
+      this.checkForSwitchLang();
     }
   }
 
   clearPressedKey(key) {
     const code = key.dataset.code;
-    if (this.pressedButtons.has(code) && code !== 'CapsLock') {
+    if (this.pressedButtons.has(code)) {
       this.pressedButtons.delete(code);
       this.toggleActiveClass(key);
     }
@@ -175,26 +113,53 @@ export class VirtualKeyboard {
     document.addEventListener('keyup', (e) => {
       const key = this.getKeyCode(e);
       if (!this.checkForExceptions(e.code)) {
+        this.checkShiftUp(e.code);
         this.clearPressedKey(key);
       }
     });
   }
 
+  addMouseDownListener() {
+    this.keyBoard.addEventListener('mousedown', (e) => {
+      this.handleKeyDown(e.target);
+      this.toggleActiveClass(e.target);
+    });
+  }
+
+  addMouseUpListener() {
+    this.keyBoard.addEventListener('mouseup', (e) => {
+      const code = e.target.dataset.code;
+      this.checkShiftUp(code);
+      this.toggleActiveClass(e.target);
+    });
+  }
+
+  checkShiftUp(code) {
+    if (code === 'ShiftLeft' || code === 'ShiftRight') {
+      this.shiftPressed(false);
+    }
+  }
+
   addListeners() {
     this.addKeyDownListener();
     this.addKeyUpListener();
+    this.addMouseDownListener();
+    this.addMouseUpListener();
+  }
 
-    this.keyBoard.addEventListener('mousedown', (e) => {
-      // handleButtonUp(e);
-      console.log('mousedown');
-      console.log(this.letters, this.digits, this.exceptions);
-      this.toggleActiveClass(e.target);
-    });
-    this.keyBoard.addEventListener('mouseup', (e) => {
-      // handleButtonUp(e);
-      console.log('mouseup');
-      this.toggleActiveClass(e.target);
-    });
+  switchLanguage() {
+    localStorage.keyboardLanguage = localStorage.keyboardLanguage === 'ru' ? 'en' : 'ru';
+    this.digits.forEach(el => el.switchLanguage());
+    this.letters.forEach(el => el.switchLanguage());
+  }
+
+  shiftPressed(letterCase) {
+    this.letters.forEach(el => el.keyShifted(letterCase));
+    this.digits.forEach(el => el.keyShifted(letterCase));
+  }
+
+  capslockPressed(letterCase) {
+    this.letters.forEach(el => el.keyCapslocked(letterCase));
   }
 
   createKeyboardInstance(data) {
@@ -208,7 +173,6 @@ export class VirtualKeyboard {
     this.generateKeyboard();
     this.pressedButtons = new Set();
     this.keyboardIsCreated = true;
-    // this.letters = document.querySelectorAll();
     this.addListeners();
   }
 
@@ -246,9 +210,6 @@ export class VirtualKeyboard {
       case 'Backspace':
         this.textArea.removeValue();
         break;
-      case 'Delete':
-        this.textArea.changeValue('Delete');
-        break;
       case 'ArrowLeft':
         this.textArea.changeValue('◄');
         break;
@@ -262,10 +223,14 @@ export class VirtualKeyboard {
         this.textArea.changeValue('▲');
         break;
       case 'CapsLock':
-        this.toggleCase();
+        this.capslocked = !this.capslocked;
+        this.capslockPressed(this.capslocked);
         break;
       case 'ShiftLeft':
-        this.toggleCase();
+        this.shiftPressed(true)
+        break;
+      case 'ShiftRight':
+        this.shiftPressed(true)
         break;
       default:
         break;

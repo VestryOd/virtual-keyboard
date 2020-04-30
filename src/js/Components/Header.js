@@ -8,7 +8,7 @@ export class Header {
     const description = createDomNode(description, 'div', 'info');
     description.innerHTML = 'Created on Win OS / lang switch: left Ctrl + Alt or globe icon';
     const langSwitch = createDomNode(langSwitch, 'button', 'info__lang-switch');
-    langSwitch.innerHTML = 'Clear textarea';
+    langSwitch.innerHTML = 'Clear';
     description__wrapper.append(description, langSwitch);
     header__wrapper.append(header, description__wrapper);
     return header__wrapper;

@@ -9840,7 +9840,7 @@ var Header = /*#__PURE__*/function () {
       var description = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(description, 'div', 'info');
       description.innerHTML = 'Created on Win OS / lang switch: left Ctrl + Alt or globe icon';
       var langSwitch = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(langSwitch, 'button', 'info__lang-switch');
-      langSwitch.innerHTML = 'Clear textarea';
+      langSwitch.innerHTML = 'Clear';
       description__wrapper.append(description, langSwitch);
       header__wrapper.append(header, description__wrapper);
       return header__wrapper;
@@ -9930,7 +9930,12 @@ var KeyButton = /*#__PURE__*/function () {
   }, {
     key: "renderSymbolContent",
     value: function renderSymbolContent() {
-      this["case"] = this["case"] === null ? 'down' : this.checkCase();
+      if (this["case"] === null) {
+        this["case"] = 'down';
+      } else {
+        this.checkCase();
+      }
+
       this.keyButton.innerHTML = this[this.lang][this["case"]];
     }
   }, {
@@ -10006,7 +10011,13 @@ var TextArea = /*#__PURE__*/function () {
     key: "changeValue",
     value: function changeValue(value) {
       var current = this.textArea.value;
-      current += value;
+
+      if (value === '&amp;') {
+        current += '&';
+      } else {
+        current += value;
+      }
+
       this.textArea.value = current;
     }
   }, {
@@ -10051,8 +10062,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
- // import handleKeyDown from "../handlers/handleKeyDown";
-// import handleButtonUp from "../handlers/handleKeyUp";
 
 /* eslint-disable no-param-reassign */
 
@@ -10068,25 +10077,20 @@ var VirtualKeyboard = /*#__PURE__*/function () {
     this.exceptions = exceptions;
     this.data = null;
     this.letters = [];
-    this.signs = [];
     this.digits = [];
     this.rootElement = null;
     this.keyBoard = null;
     this.textArea = null;
     this.header = null;
-    this.languageButton = null;
-    this.mouseClicked = null;
     this.pressedButtons = null;
-    this.currentPosition = null;
-    this.shifted = null;
-    this.capslocked = null;
+    this.capslocked = false;
     this.keyboardIsCreated = false;
   }
 
   _createClass(VirtualKeyboard, [{
     key: "setRootElement",
     value: function setRootElement() {
-      var main = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(main, 'div', 'main', 'motion-colors');
+      var main = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(main, 'div', 'main');
       this.rootElement = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(this.rootElement, 'div', 'container');
       main.append(this.rootElement);
       document.body.prepend(main);
@@ -10120,11 +10124,11 @@ var VirtualKeyboard = /*#__PURE__*/function () {
       var data = this.defaultSet;
       this.keyBoard = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(this.keyBoard, 'div', 'keyboard');
       data.forEach(function (elem) {
-        var keyButton = new _KeyButton__WEBPACK_IMPORTED_MODULE_3__["KeyButton"](elem).makeKeyButton();
+        var keyButton = new _KeyButton__WEBPACK_IMPORTED_MODULE_3__["KeyButton"](elem);
 
         _this.checkKeyObjectForClasses(elem, keyButton);
 
-        _this.keyBoard.append(keyButton);
+        _this.keyBoard.append(keyButton.makeKeyButton());
       });
       this.rootElement.append(this.keyBoard);
     }
@@ -10132,59 +10136,13 @@ var VirtualKeyboard = /*#__PURE__*/function () {
     key: "checkForExceptions",
     value: function checkForExceptions(code) {
       return this.exceptions.includes(code);
-    } // checkDown(btn) {
-    //   if (btn.classList.includes('special')) {
-    //     this.handleSymbolDown(btn);
-    //   } else {
-    //     this.handleSpecialDown(btn);
-    //   }
-    // }
-    // handleSymbolDown(btn) {
-    //   const value = btn.innerHTML;
-    //   this.textAreaChangeInfo(value);
-    // }
-    // handleButtonDown(e) {
-    //   const button = e.taget;
-    //   const keyCode = button.dataset.code;
-    //   if (!this.pressedButtons.has(keyCode)) {
-    //     this.pressedButtons.add(keyCode);
-    //     button.classList.toggle('active');
-    //   }
-    //   this.checkDown(button);
-    // }
-    // textAreaChangeInfo(value) {
-    //   const text = this.textArea.value;
-    //   this.textArea.focus();
-    //   if (value === '&amp;') {
-    //     this.textArea.setRangeText('&', this.textArea.selectionStart, this.textArea.selectionEnd, 'end');
-    //   } else if (value === 'Backspace') {
-    //     if (this.currentPosition) {
-    //       this.textArea.value = text.slice(0, this.currentPosition - 1) + text.slice(this.currentPosition, text.length);
-    //       this.textArea.setRangeText('', this.currentPosition, this.currentPosition, 'end');
-    //     } else {
-    //       this.textArea.value = text.slice(0, -1);
-    //     }
-    //   } else if (value === 'Delete') {
-    //     this.textArea.value = text.slice(0, this.currentPosition) + text.slice(this.currentPosition + 1, text.length);
-    //     this.textArea.setRangeText('', this.currentPosition, this.currentPosition, 'end');
-    //   } else {
-    //     this.textArea.setRangeText(value, this.textArea.selectionStart, this.textArea.selectionEnd, 'end');
-    //   }
-    // }
-    // handleButtonUp(e) {
-    //   const button = e.taget;
-    //   const keyCode = button.dataset.code;
-    //   this.checkForSwitchLang();
-    //   if (this.pressedButtons.has(keyCode) && keyCode !== 'CapsLock') {
-    //     this.pressedButtons.delete(keyCode);
-    //     button.classList.toggle('active');
-    //   }
-    // }
-    // checkForSwitchLang() {
-    //   const conditionToSwitch = this.pressedButtons.has('ShiftLeft') && this.pressedButtons.has('AltLeft');
-    //   if (conditionToSwitch) this.switchLanguage();
-    // }
-
+    }
+  }, {
+    key: "checkForSwitchLang",
+    value: function checkForSwitchLang() {
+      var conditionToSwitch = this.pressedButtons.has('ControlLeft') && this.pressedButtons.has('AltLeft');
+      if (conditionToSwitch) this.switchLanguage();
+    }
   }, {
     key: "handleSymbolDown",
     value: function handleSymbolDown(target) {
@@ -10210,7 +10168,8 @@ var VirtualKeyboard = /*#__PURE__*/function () {
 
       if (!this.pressedButtons.has(code)) {
         this.pressedButtons.add(code);
-        this.toggleActiveClass(key); // this.checkForSwitchLang(eventCode);
+        this.toggleActiveClass(key);
+        this.checkForSwitchLang();
       }
     }
   }, {
@@ -10218,7 +10177,7 @@ var VirtualKeyboard = /*#__PURE__*/function () {
     value: function clearPressedKey(key) {
       var code = key.dataset.code;
 
-      if (this.pressedButtons.has(code) && code !== 'CapsLock') {
+      if (this.pressedButtons.has(code)) {
         this.pressedButtons["delete"](code);
         this.toggleActiveClass(key);
       }
@@ -10249,29 +10208,77 @@ var VirtualKeyboard = /*#__PURE__*/function () {
         var key = _this3.getKeyCode(e);
 
         if (!_this3.checkForExceptions(e.code)) {
+          _this3.checkShiftUp(e.code);
+
           _this3.clearPressedKey(key);
         }
       });
     }
   }, {
-    key: "addListeners",
-    value: function addListeners() {
+    key: "addMouseDownListener",
+    value: function addMouseDownListener() {
       var _this4 = this;
 
-      this.addKeyDownListener();
-      this.addKeyUpListener();
       this.keyBoard.addEventListener('mousedown', function (e) {
-        // handleButtonUp(e);
-        console.log('mousedown');
-        console.log(_this4.letters, _this4.digits, _this4.exceptions);
+        _this4.handleKeyDown(e.target);
 
         _this4.toggleActiveClass(e.target);
       });
-      this.keyBoard.addEventListener('mouseup', function (e) {
-        // handleButtonUp(e);
-        console.log('mouseup');
+    }
+  }, {
+    key: "addMouseUpListener",
+    value: function addMouseUpListener() {
+      var _this5 = this;
 
-        _this4.toggleActiveClass(e.target);
+      this.keyBoard.addEventListener('mouseup', function (e) {
+        var code = e.target.dataset.code;
+
+        _this5.checkShiftUp(code);
+
+        _this5.toggleActiveClass(e.target);
+      });
+    }
+  }, {
+    key: "checkShiftUp",
+    value: function checkShiftUp(code) {
+      if (code === 'ShiftLeft' || code === 'ShiftRight') {
+        this.shiftPressed(false);
+      }
+    }
+  }, {
+    key: "addListeners",
+    value: function addListeners() {
+      this.addKeyDownListener();
+      this.addKeyUpListener();
+      this.addMouseDownListener();
+      this.addMouseUpListener();
+    }
+  }, {
+    key: "switchLanguage",
+    value: function switchLanguage() {
+      localStorage.keyboardLanguage = localStorage.keyboardLanguage === 'ru' ? 'en' : 'ru';
+      this.digits.forEach(function (el) {
+        return el.switchLanguage();
+      });
+      this.letters.forEach(function (el) {
+        return el.switchLanguage();
+      });
+    }
+  }, {
+    key: "shiftPressed",
+    value: function shiftPressed(letterCase) {
+      this.letters.forEach(function (el) {
+        return el.keyShifted(letterCase);
+      });
+      this.digits.forEach(function (el) {
+        return el.keyShifted(letterCase);
+      });
+    }
+  }, {
+    key: "capslockPressed",
+    value: function capslockPressed(letterCase) {
+      this.letters.forEach(function (el) {
+        return el.keyCapslocked(letterCase);
       });
     }
   }, {
@@ -10287,8 +10294,7 @@ var VirtualKeyboard = /*#__PURE__*/function () {
       this.makeTextArea();
       this.generateKeyboard();
       this.pressedButtons = new Set();
-      this.keyboardIsCreated = true; // this.letters = document.querySelectorAll();
-
+      this.keyboardIsCreated = true;
       this.addListeners();
     }
   }, {
@@ -10338,10 +10344,6 @@ var VirtualKeyboard = /*#__PURE__*/function () {
           this.textArea.removeValue();
           break;
 
-        case 'Delete':
-          this.textArea.changeValue('Delete');
-          break;
-
         case 'ArrowLeft':
           this.textArea.changeValue('◄');
           break;
@@ -10359,11 +10361,16 @@ var VirtualKeyboard = /*#__PURE__*/function () {
           break;
 
         case 'CapsLock':
-          this.toggleCase();
+          this.capslocked = !this.capslocked;
+          this.capslockPressed(this.capslocked);
           break;
 
         case 'ShiftLeft':
-          this.toggleCase();
+          this.shiftPressed(true);
+          break;
+
+        case 'ShiftRight':
+          this.shiftPressed(true);
           break;
 
         default:
@@ -10428,8 +10435,7 @@ var keyValues = [{
       up: '~'
     }
   },
-  classes: ['symbol', 'backquote', 'letter'],
-  lang: ['ru', 'sign']
+  classes: ['symbol', 'backquote', 'letter']
 }, {
   code: 'Digit1',
   value: {
@@ -10606,8 +10612,7 @@ var keyValues = [{
       up: 'Q'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyW',
   value: {
@@ -10620,8 +10625,7 @@ var keyValues = [{
       up: 'W'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyE',
   value: {
@@ -10634,8 +10638,7 @@ var keyValues = [{
       up: 'E'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyR',
   value: {
@@ -10648,8 +10651,7 @@ var keyValues = [{
       up: 'R'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyT',
   value: {
@@ -10662,8 +10664,7 @@ var keyValues = [{
       up: 'T'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyY',
   value: {
@@ -10676,8 +10677,7 @@ var keyValues = [{
       up: 'Y'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyU',
   value: {
@@ -10690,8 +10690,7 @@ var keyValues = [{
       up: 'U'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyI',
   value: {
@@ -10704,8 +10703,7 @@ var keyValues = [{
       up: 'I'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyO',
   value: {
@@ -10718,8 +10716,7 @@ var keyValues = [{
       up: 'O'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyP',
   value: {
@@ -10732,8 +10729,7 @@ var keyValues = [{
       up: 'P'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'BracketLeft',
   value: {
@@ -10746,8 +10742,7 @@ var keyValues = [{
       up: '{'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'sign']
+  classes: ['symbol', 'letter']
 }, {
   code: 'BracketRight',
   value: {
@@ -10760,8 +10755,7 @@ var keyValues = [{
       up: '}'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'sign']
+  classes: ['symbol', 'letter']
 }, {
   code: 'Backslash',
   value: {
@@ -10791,8 +10785,7 @@ var keyValues = [{
       up: 'A'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyS',
   value: {
@@ -10805,8 +10798,7 @@ var keyValues = [{
       up: 'S'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyD',
   value: {
@@ -10819,8 +10811,7 @@ var keyValues = [{
       up: 'D'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyF',
   value: {
@@ -10833,8 +10824,7 @@ var keyValues = [{
       up: 'F'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyG',
   value: {
@@ -10847,8 +10837,7 @@ var keyValues = [{
       up: 'G'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyH',
   value: {
@@ -10861,8 +10850,7 @@ var keyValues = [{
       up: 'H'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyJ',
   value: {
@@ -10875,8 +10863,7 @@ var keyValues = [{
       up: 'J'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyK',
   value: {
@@ -10889,8 +10876,7 @@ var keyValues = [{
       up: 'K'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyL',
   value: {
@@ -10903,8 +10889,7 @@ var keyValues = [{
       up: 'L'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'Semicolon',
   value: {
@@ -10917,8 +10902,7 @@ var keyValues = [{
       up: ':'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'sign']
+  classes: ['symbol', 'letter']
 }, {
   code: 'Quote',
   value: {
@@ -10931,8 +10915,7 @@ var keyValues = [{
       up: '\''
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'sign']
+  classes: ['symbol', 'letter']
 }, {
   code: 'Enter',
   value: 'Enter',
@@ -10953,8 +10936,7 @@ var keyValues = [{
       up: 'Z'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyX',
   value: {
@@ -10967,8 +10949,7 @@ var keyValues = [{
       up: 'X'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyC',
   value: {
@@ -10981,8 +10962,7 @@ var keyValues = [{
       up: 'C'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyV',
   value: {
@@ -10995,8 +10975,7 @@ var keyValues = [{
       up: 'V'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyB',
   value: {
@@ -11009,8 +10988,7 @@ var keyValues = [{
       up: 'B'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyN',
   value: {
@@ -11023,8 +11001,7 @@ var keyValues = [{
       up: 'N'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'KeyM',
   value: {
@@ -11037,8 +11014,7 @@ var keyValues = [{
       up: 'M'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'en']
+  classes: ['symbol', 'letter']
 }, {
   code: 'Comma',
   value: {
@@ -11051,8 +11027,7 @@ var keyValues = [{
       up: '<'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'sign']
+  classes: ['symbol', 'letter']
 }, {
   code: 'Period',
   value: {
@@ -11065,8 +11040,7 @@ var keyValues = [{
       up: '>'
     }
   },
-  classes: ['symbol', 'letter'],
-  lang: ['ru', 'sign']
+  classes: ['symbol', 'letter']
 }, {
   code: 'Slash',
   value: {
@@ -11079,7 +11053,7 @@ var keyValues = [{
       up: '?'
     }
   },
-  classes: ['symbol']
+  classes: ['symbol', 'letter']
 }, {
   code: 'ArrowUp',
   value: '▲',

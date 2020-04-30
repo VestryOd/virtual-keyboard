@@ -418,7 +418,7 @@ ul {
   box-sizing: border-box;
 }
 
-.keyboard__key, .info__lang-switch {
+.keyboard__key, .info__lang-switch, .main {
   transition: all 0.5s ease-out;
 }
 
@@ -497,7 +497,7 @@ body {
 }
 
 .info__lang-switch {
-  padding: 10px 20px;
+  padding: 5px 20px;
   border-radius: 10px;
   border: 1px solid transparent;
   outline: transparent;
@@ -616,6 +616,60 @@ body {
 
 .contextMenu {
   background-image: url("/assets/img/globe.svg");
+}
+
+.motion-colors {
+  background: linear-gradient(270deg, #8364b7, #3096db, #90bbdd, #bae1ea);
+  background-size: 800% 800%;
+  -webkit-animation: motion-gradient 29s ease infinite;
+  -moz-animation: motion-gradient 29s ease infinite;
+  -o-animation: motion-gradient 29s ease infinite;
+  animation: motion-gradient 29s ease infinite;
+}
+
+@-webkit-keyframes motion-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-moz-keyframes motion-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-o-keyframes motion-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes motion-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /*# sourceMappingURL=style.css.map*/

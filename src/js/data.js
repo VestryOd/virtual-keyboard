@@ -13,7 +13,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'backquote', 'letter'],
-    lang: ['ru', 'sign'],
   },
   {
     code: 'Digit1',
@@ -172,7 +171,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyW',
@@ -185,7 +183,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyE',
@@ -198,7 +195,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyR',
@@ -211,7 +207,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyT',
@@ -224,7 +219,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyY',
@@ -237,7 +231,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyU',
@@ -250,7 +243,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyI',
@@ -263,7 +255,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyO',
@@ -276,7 +267,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyP',
@@ -289,7 +279,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'BracketLeft',
@@ -302,7 +291,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'sign'],
   },
   {
     code: 'BracketRight',
@@ -315,7 +303,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'sign'],
   },
   {
     code: 'Backslash',
@@ -341,7 +328,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyS',
@@ -354,7 +340,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyD',
@@ -367,7 +352,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyF',
@@ -380,7 +364,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyG',
@@ -393,7 +376,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyH',
@@ -406,7 +388,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyJ',
@@ -419,7 +400,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyK',
@@ -432,7 +412,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyL',
@@ -445,7 +424,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'Semicolon',
@@ -458,7 +436,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'sign'],
   },
   {
     code: 'Quote',
@@ -471,7 +448,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'sign'],
   },
   { code: 'Enter', value: 'Enter', classes: ['special', 'enter'] },
   { code: 'ShiftLeft', value: 'Shift', classes: ['special', 'shiftLeft'] },
@@ -486,7 +462,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyX',
@@ -499,7 +474,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyC',
@@ -512,7 +486,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyV',
@@ -525,7 +498,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyB',
@@ -538,7 +510,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyN',
@@ -551,7 +522,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'KeyM',
@@ -564,7 +534,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'en'],
   },
   {
     code: 'Comma',
@@ -577,7 +546,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'sign'],
   },
   {
     code: 'Period',
@@ -590,7 +558,6 @@ const keyValues = [
       }
     },
     classes: ['symbol', 'letter'],
-    lang: ['ru', 'sign'],
   },
   {
     code: 'Slash',
@@ -602,7 +569,7 @@ const keyValues = [
         down: '/', up: '?',
       }
     },
-    classes: ['symbol'],
+    classes: ['symbol', 'letter'],
   },
   { code: 'ArrowUp', value: '▲', classes: ['special'] },
   { code: 'ShiftRight', value: 'Shift', classes: ['special', 'shiftRight'] },
