@@ -9795,11 +9795,13 @@ module.exports.formatError = function(err) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_Components_VirtualKeyboard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./js/Components/VirtualKeyboard */ "./src/js/Components/VirtualKeyboard.js");
 /* harmony import */ var _js_data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./js/data */ "./src/js/data.js");
+/* harmony import */ var _js_exceptions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/exceptions */ "./src/js/exceptions.js");
+
 
 
 
 window.onload = function () {
-  var keyboard = new _js_Components_VirtualKeyboard__WEBPACK_IMPORTED_MODULE_0__["VirtualKeyboard"](_js_data__WEBPACK_IMPORTED_MODULE_1__["default"]);
+  var keyboard = new _js_Components_VirtualKeyboard__WEBPACK_IMPORTED_MODULE_0__["VirtualKeyboard"](_js_data__WEBPACK_IMPORTED_MODULE_1__["default"], _js_exceptions__WEBPACK_IMPORTED_MODULE_2__["default"]);
   keyboard.createKeyboardInstance();
 };
 
@@ -9983,6 +9985,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var TextArea = /*#__PURE__*/function () {
   function TextArea() {
     _classCallCheck(this, TextArea);
+
+    this.value = '';
+    this.textArea = null;
   }
 
   _createClass(TextArea, [{
@@ -9993,8 +9998,28 @@ var TextArea = /*#__PURE__*/function () {
       var textArea = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(textArea, 'textarea', 'textarea');
       textArea.setAttribute('id', 'textarea');
       textArea.setAttribute('autofocus', true);
+      this.textArea = textArea;
       wrapper.append(textArea);
       return wrapper;
+    }
+  }, {
+    key: "changeValue",
+    value: function changeValue(value) {
+      var current = this.textArea.value;
+      current += value;
+      this.textArea.value = current;
+    }
+  }, {
+    key: "removeValue",
+    value: function removeValue() {
+      var current = this.textArea.value;
+      var newValue = current.substring(0, current.length - 1);
+      this.textArea.value = newValue;
+    }
+  }, {
+    key: "clearValue",
+    value: function clearValue() {
+      this.textArea.value = '';
     }
   }]);
 
@@ -10026,6 +10051,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+ // import handleKeyDown from "../handlers/handleKeyDown";
+// import handleButtonUp from "../handlers/handleKeyUp";
 
 /* eslint-disable no-param-reassign */
 
@@ -10034,10 +10061,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 /* eslint-disable class-methods-use-this */
 
 var VirtualKeyboard = /*#__PURE__*/function () {
-  function VirtualKeyboard(alphabets) {
+  function VirtualKeyboard(alphabets, exceptions) {
     _classCallCheck(this, VirtualKeyboard);
 
     this.defaultSet = alphabets;
+    this.exceptions = exceptions;
     this.data = null;
     this.letters = [];
     this.signs = [];
@@ -10072,8 +10100,17 @@ var VirtualKeyboard = /*#__PURE__*/function () {
   }, {
     key: "makeTextArea",
     value: function makeTextArea() {
-      this.textArea = new _TextArea__WEBPACK_IMPORTED_MODULE_2__["TextArea"]().generateTextArea();
-      this.rootElement.append(this.textArea);
+      this.textArea = new _TextArea__WEBPACK_IMPORTED_MODULE_2__["TextArea"]();
+      this.rootElement.append(this.textArea.generateTextArea());
+    }
+  }, {
+    key: "checkKeyObjectForClasses",
+    value: function checkKeyObjectForClasses(obj, keyButton) {
+      var classes = obj.classes;
+
+      if (!classes.includes('special')) {
+        classes.includes('letter') ? this.letters.push(keyButton) : this.digits.push(keyButton);
+      }
     }
   }, {
     key: "generateKeyboard",
@@ -10084,53 +10121,18 @@ var VirtualKeyboard = /*#__PURE__*/function () {
       this.keyBoard = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(this.keyBoard, 'div', 'keyboard');
       data.forEach(function (elem) {
         var keyButton = new _KeyButton__WEBPACK_IMPORTED_MODULE_3__["KeyButton"](elem).makeKeyButton();
-        elem.classes.includes('letter') ? _this.letters.push(keyButton) : _this.digits.push(keyButton);
+
+        _this.checkKeyObjectForClasses(elem, keyButton);
 
         _this.keyBoard.append(keyButton);
       });
       this.rootElement.append(this.keyBoard);
-    } // eslint-disable-next-line class-methods-use-this
-    // generateKeyboardButton(obj) {
-    //   let button = null;
-    //   button = createDomNode(button, 'button', 'keyboard__key', ...obj.classes);
-    //   button.setAttribute('type', 'button');
-    //   button.setAttribute('data-code', obj.code);
-    //   button = obj.value ? this.createSpecialButton(button, obj) : this.createSymbolButton(button, obj, 'down');
-    //   const { ru, en } = obj;
-    //   if (ru.down) btn.setAttribute('data-ru', ru.down);
-    //   if (en.down) btn.setAttribute('data-en', en.down);
-    //   btn = this.setButtonValue(btn, obj);
-    //   return btn;
-    //   this.setButtonValue(btn);
-    //   return button;
-    // }
-    // createSpecialButton(button, obj) {
-    //   button.innerHTML = obj.value;
-    //   return button;
-    // }
-    // createSymbolButton(button, obj, letterCase) {
-    //   console.log('symbol', obj);
-    //   const lang = localStorage.getItem('keyboardLanguage');
-    //   const langObject = obj[lang];
-    //   console.log(lang);
-    //   button.innerHTML = langObject[letterCase];
-    //   return button;
-    // }
-    // setButtonValue(btn, obj) {
-    //   return obj.classes.includes('special') ? this.specialkey(btn, obj) : this.simpleKey(btn, obj);
-    // }
-    // simpleKey(btn, obj) {
-    //   const lang = localStorage.keyboardLanguage;
-    //   const keyValue = obj[lang];
-    //   const upOrDown = this.shifted && !this.capslocked;
-    //   btn.innerHTML = upOrDown ? keyValue.up : keyValue.down;
-    //   return btn;
-    // }
-    // specialkey(btn, obj) {
-    //   btn.innerHTML = obj.value;
-    //   return btn;
-    // }
-    // checkDown(btn) {
+    }
+  }, {
+    key: "checkForExceptions",
+    value: function checkForExceptions(code) {
+      return this.exceptions.includes(code);
+    } // checkDown(btn) {
     //   if (btn.classList.includes('special')) {
     //     this.handleSymbolDown(btn);
     //   } else {
@@ -10169,49 +10171,6 @@ var VirtualKeyboard = /*#__PURE__*/function () {
     //     this.textArea.setRangeText(value, this.textArea.selectionStart, this.textArea.selectionEnd, 'end');
     //   }
     // }
-    // handleSpecialDown(btn) {
-    //   const special = btn.dataset.code;
-    //   switch (special) {
-    //     case 'Space':
-    //       this.textAreaChangeInfo(' ');
-    //       break;
-    //     case 'ContextMenu':
-    //       this.switchLanguage();
-    //       break;
-    //     case 'Enter':
-    //       this.textAreaChangeInfo('\n');
-    //       break;
-    //     case 'Tab':
-    //       this.textAreaChangeInfo('\t');
-    //       break;
-    //     case 'Backspace':
-    //       this.textAreaChangeInfo('Backspace');
-    //       break;
-    //     case 'Delete':
-    //       this.textAreaChangeInfo('Delete');
-    //       break;
-    //     case 'ArrowLeft':
-    //       this.textAreaChangeInfo('◄');
-    //       break;
-    //     case 'ArrowDown':
-    //       this.textAreaChangeInfo('▼');
-    //       break;
-    //     case 'ArrowRight':
-    //       this.textAreaChangeInfo('►');
-    //       break;
-    //     case 'ArrowUp':
-    //       this.textAreaChangeInfo('▲');
-    //       break;
-    //     case 'CapsLock':
-    //       this.toggleCase();
-    //       break;
-    //     case 'ShiftLeft':
-    //       this.toggleCase();
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // }
     // handleButtonUp(e) {
     //   const button = e.taget;
     //   const keyCode = button.dataset.code;
@@ -10225,13 +10184,96 @@ var VirtualKeyboard = /*#__PURE__*/function () {
     //   const conditionToSwitch = this.pressedButtons.has('ShiftLeft') && this.pressedButtons.has('AltLeft');
     //   if (conditionToSwitch) this.switchLanguage();
     // }
-    // switchLanguage() {
-    //   //
-    // }
-    // addListeners() {
-    //   //
-    // }
 
+  }, {
+    key: "handleSymbolDown",
+    value: function handleSymbolDown(target) {
+      var value = target.innerHTML;
+      changeValue(value);
+    }
+  }, {
+    key: "toggleActiveClass",
+    value: function toggleActiveClass(target) {
+      target.classList.toggle('active');
+    }
+  }, {
+    key: "getKeyCode",
+    value: function getKeyCode(e) {
+      var code = e.code;
+      var key = document.querySelector(".keyboard__key[data-code=\"".concat(code, "\"]"));
+      return key;
+    }
+  }, {
+    key: "checkForPressRepeating",
+    value: function checkForPressRepeating(key) {
+      var code = key.dataset.code;
+
+      if (!this.pressedButtons.has(code)) {
+        this.pressedButtons.add(code);
+        this.toggleActiveClass(key); // this.checkForSwitchLang(eventCode);
+      }
+    }
+  }, {
+    key: "clearPressedKey",
+    value: function clearPressedKey(key) {
+      var code = key.dataset.code;
+
+      if (this.pressedButtons.has(code) && code !== 'CapsLock') {
+        this.pressedButtons["delete"](code);
+        this.toggleActiveClass(key);
+      }
+    }
+  }, {
+    key: "addKeyDownListener",
+    value: function addKeyDownListener() {
+      var _this2 = this;
+
+      document.addEventListener('keydown', function (e) {
+        var key = _this2.getKeyCode(e);
+
+        if (!_this2.checkForExceptions(e.code)) {
+          e.preventDefault();
+
+          _this2.checkForPressRepeating(key);
+
+          _this2.handleKeyDown(key);
+        }
+      });
+    }
+  }, {
+    key: "addKeyUpListener",
+    value: function addKeyUpListener() {
+      var _this3 = this;
+
+      document.addEventListener('keyup', function (e) {
+        var key = _this3.getKeyCode(e);
+
+        if (!_this3.checkForExceptions(e.code)) {
+          _this3.clearPressedKey(key);
+        }
+      });
+    }
+  }, {
+    key: "addListeners",
+    value: function addListeners() {
+      var _this4 = this;
+
+      this.addKeyDownListener();
+      this.addKeyUpListener();
+      this.keyBoard.addEventListener('mousedown', function (e) {
+        // handleButtonUp(e);
+        console.log('mousedown');
+        console.log(_this4.letters, _this4.digits, _this4.exceptions);
+
+        _this4.toggleActiveClass(e.target);
+      });
+      this.keyBoard.addEventListener('mouseup', function (e) {
+        // handleButtonUp(e);
+        console.log('mouseup');
+
+        _this4.toggleActiveClass(e.target);
+      });
+    }
   }, {
     key: "createKeyboardInstance",
     value: function createKeyboardInstance(data) {
@@ -10246,7 +10288,87 @@ var VirtualKeyboard = /*#__PURE__*/function () {
       this.generateKeyboard();
       this.pressedButtons = new Set();
       this.keyboardIsCreated = true; // this.letters = document.querySelectorAll();
-      // this.addListeners();
+
+      this.addListeners();
+    }
+  }, {
+    key: "handleSymbolDown",
+    value: function handleSymbolDown(target) {
+      var value = target.innerHTML;
+      this.textArea.changeValue(value);
+    }
+  }, {
+    key: "handleKeyDown",
+    value: function handleKeyDown(key) {
+      var button = key;
+
+      if (button.classList.contains('keyboard__key')) {
+        if (button.classList.contains('special')) {
+          this.handleSpecialDown(button);
+        } else {
+          this.handleSymbolDown(button);
+        }
+      }
+
+      ;
+    }
+  }, {
+    key: "handleSpecialDown",
+    value: function handleSpecialDown(target) {
+      var special = target.dataset.code;
+
+      switch (special) {
+        case 'Space':
+          this.textArea.changeValue(' ');
+          break;
+
+        case 'ContextMenu':
+          this.switchLanguage();
+          break;
+
+        case 'Enter':
+          this.textArea.changeValue('\n');
+          break;
+
+        case 'Tab':
+          this.textArea.changeValue('\t');
+          break;
+
+        case 'Backspace':
+          this.textArea.removeValue();
+          break;
+
+        case 'Delete':
+          this.textArea.changeValue('Delete');
+          break;
+
+        case 'ArrowLeft':
+          this.textArea.changeValue('◄');
+          break;
+
+        case 'ArrowDown':
+          this.textArea.changeValue('▼');
+          break;
+
+        case 'ArrowRight':
+          this.textArea.changeValue('►');
+          break;
+
+        case 'ArrowUp':
+          this.textArea.changeValue('▲');
+          break;
+
+        case 'CapsLock':
+          this.toggleCase();
+          break;
+
+        case 'ShiftLeft':
+          this.toggleCase();
+          break;
+
+        default:
+          break;
+      }
     }
   }]);
 
@@ -11008,6 +11130,20 @@ var keyValues = [{
   classes: ['special', 'controlRight']
 }];
 /* harmony default export */ __webpack_exports__["default"] = (keyValues);
+
+/***/ }),
+
+/***/ "./src/js/exceptions.js":
+/*!******************************!*\
+  !*** ./src/js/exceptions.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var exceptions = ['Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'Pause', 'Insert', 'Delete', 'Home', 'PageUp', 'PageDown', 'End'];
+/* harmony default export */ __webpack_exports__["default"] = (exceptions);
 
 /***/ }),
 

@@ -2,12 +2,15 @@ import createDomNode from "../createDomNode";
 import { Header } from "./Header";
 import { TextArea } from "./TextArea";
 import { KeyButton } from "./KeyButton";
+// import handleKeyDown from "../handlers/handleKeyDown";
+// import handleButtonUp from "../handlers/handleKeyUp";
 /* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
 /* eslint-disable class-methods-use-this */
 export class VirtualKeyboard {
-  constructor(alphabets) {
+  constructor(alphabets, exceptions) {
     this.defaultSet = alphabets;
+    this.exceptions = exceptions;
     this.data = null;
     this.letters = [];
     this.signs = [];
@@ -39,8 +42,15 @@ export class VirtualKeyboard {
   }
 
   makeTextArea() {
-    this.textArea = new TextArea().generateTextArea();
-    this.rootElement.append(this.textArea);
+    this.textArea = new TextArea();
+    this.rootElement.append(this.textArea.generateTextArea());
+  }
+
+  checkKeyObjectForClasses(obj, keyButton) {
+    const classes = obj.classes;
+    if (!classes.includes('special')) {
+      classes.includes('letter') ? this.letters.push(keyButton) : this.digits.push(keyButton);
+    }
   }
 
   generateKeyboard() {
@@ -48,60 +58,15 @@ export class VirtualKeyboard {
     this.keyBoard = createDomNode(this.keyBoard, 'div', 'keyboard');
     data.forEach((elem) => {
       let keyButton = new KeyButton(elem).makeKeyButton();
-      elem.classes.includes('letter') ? this.letters.push(keyButton) : this.digits.push(keyButton);
+      this.checkKeyObjectForClasses(elem, keyButton);
       this.keyBoard.append(keyButton);
     });
     this.rootElement.append(this.keyBoard);
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  // generateKeyboardButton(obj) {
-  //   let button = null;
-  //   button = createDomNode(button, 'button', 'keyboard__key', ...obj.classes);
-  //   button.setAttribute('type', 'button');
-  //   button.setAttribute('data-code', obj.code);
-
-  //   button = obj.value ? this.createSpecialButton(button, obj) : this.createSymbolButton(button, obj, 'down');
-  //   const { ru, en } = obj;
-  //   if (ru.down) btn.setAttribute('data-ru', ru.down);
-  //   if (en.down) btn.setAttribute('data-en', en.down);
-  //   btn = this.setButtonValue(btn, obj);
-  //   return btn;
-  //   this.setButtonValue(btn);
-  //   return button;
-  // }
-
-  // createSpecialButton(button, obj) {
-  //   button.innerHTML = obj.value;
-  //   return button;
-  // }
-
-  // createSymbolButton(button, obj, letterCase) {
-  //   console.log('symbol', obj);
-  //   const lang = localStorage.getItem('keyboardLanguage');
-  //   const langObject = obj[lang];
-  //   console.log(lang);
-
-  //   button.innerHTML = langObject[letterCase];
-  //   return button;
-  // }
-
-  // setButtonValue(btn, obj) {
-  //   return obj.classes.includes('special') ? this.specialkey(btn, obj) : this.simpleKey(btn, obj);
-  // }
-
-  // simpleKey(btn, obj) {
-  //   const lang = localStorage.keyboardLanguage;
-  //   const keyValue = obj[lang];
-  //   const upOrDown = this.shifted && !this.capslocked;
-  //   btn.innerHTML = upOrDown ? keyValue.up : keyValue.down;
-  //   return btn;
-  // }
-
-  // specialkey(btn, obj) {
-  //   btn.innerHTML = obj.value;
-  //   return btn;
-  // }
+  checkForExceptions(code) {
+    return this.exceptions.includes(code);
+  }
 
   // checkDown(btn) {
   //   if (btn.classList.includes('special')) {
@@ -146,49 +111,7 @@ export class VirtualKeyboard {
   //   }
   // }
 
-  // handleSpecialDown(btn) {
-  //   const special = btn.dataset.code;
-  //   switch (special) {
-  //     case 'Space':
-  //       this.textAreaChangeInfo(' ');
-  //       break;
-  //     case 'ContextMenu':
-  //       this.switchLanguage();
-  //       break;
-  //     case 'Enter':
-  //       this.textAreaChangeInfo('\n');
-  //       break;
-  //     case 'Tab':
-  //       this.textAreaChangeInfo('\t');
-  //       break;
-  //     case 'Backspace':
-  //       this.textAreaChangeInfo('Backspace');
-  //       break;
-  //     case 'Delete':
-  //       this.textAreaChangeInfo('Delete');
-  //       break;
-  //     case 'ArrowLeft':
-  //       this.textAreaChangeInfo('◄');
-  //       break;
-  //     case 'ArrowDown':
-  //       this.textAreaChangeInfo('▼');
-  //       break;
-  //     case 'ArrowRight':
-  //       this.textAreaChangeInfo('►');
-  //       break;
-  //     case 'ArrowUp':
-  //       this.textAreaChangeInfo('▲');
-  //       break;
-  //     case 'CapsLock':
-  //       this.toggleCase();
-  //       break;
-  //     case 'ShiftLeft':
-  //       this.toggleCase();
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
+
 
   // handleButtonUp(e) {
   //   const button = e.taget;
@@ -205,13 +128,74 @@ export class VirtualKeyboard {
   //   if (conditionToSwitch) this.switchLanguage();
   // }
 
-  // switchLanguage() {
-  //   //
-  // }
+  handleSymbolDown(target) {
+    const value = target.innerHTML;
+    changeValue(value);
+  }
 
-  // addListeners() {
-  //   //
-  // }
+  toggleActiveClass(target) {
+    target.classList.toggle('active');
+  }
+
+  getKeyCode(e) {
+    const code = e.code;
+    const key = document.querySelector(`.keyboard__key[data-code="${code}"]`);
+    return key;
+  }
+
+  checkForPressRepeating(key) {
+    const code = key.dataset.code;
+    if (!this.pressedButtons.has(code)) {
+      this.pressedButtons.add(code);
+      this.toggleActiveClass(key);
+      // this.checkForSwitchLang(eventCode);
+    }
+  }
+
+  clearPressedKey(key) {
+    const code = key.dataset.code;
+    if (this.pressedButtons.has(code) && code !== 'CapsLock') {
+      this.pressedButtons.delete(code);
+      this.toggleActiveClass(key);
+    }
+  }
+
+  addKeyDownListener() {
+    document.addEventListener('keydown', (e) => {
+      const key = this.getKeyCode(e);
+      if (!this.checkForExceptions(e.code)) {
+        e.preventDefault();
+        this.checkForPressRepeating(key);
+        this.handleKeyDown(key);
+      }
+    });
+  }
+
+  addKeyUpListener() {
+    document.addEventListener('keyup', (e) => {
+      const key = this.getKeyCode(e);
+      if (!this.checkForExceptions(e.code)) {
+        this.clearPressedKey(key);
+      }
+    });
+  }
+
+  addListeners() {
+    this.addKeyDownListener();
+    this.addKeyUpListener();
+
+    this.keyBoard.addEventListener('mousedown', (e) => {
+      // handleButtonUp(e);
+      console.log('mousedown');
+      console.log(this.letters, this.digits, this.exceptions);
+      this.toggleActiveClass(e.target);
+    });
+    this.keyBoard.addEventListener('mouseup', (e) => {
+      // handleButtonUp(e);
+      console.log('mouseup');
+      this.toggleActiveClass(e.target);
+    });
+  }
 
   createKeyboardInstance(data) {
     if (!localStorage.keyboardLanguage) {
@@ -225,6 +209,66 @@ export class VirtualKeyboard {
     this.pressedButtons = new Set();
     this.keyboardIsCreated = true;
     // this.letters = document.querySelectorAll();
-    // this.addListeners();
+    this.addListeners();
   }
+
+  handleSymbolDown(target) {
+    const value = target.innerHTML;
+    this.textArea.changeValue(value);
+  }
+
+  handleKeyDown(key) {
+    const button = key;
+    if (button.classList.contains('keyboard__key')) {
+      if (button.classList.contains('special')) {
+        this.handleSpecialDown(button);
+      } else {
+        this.handleSymbolDown(button);
+      }
+    };
+  }
+
+  handleSpecialDown(target) {
+    const special = target.dataset.code;
+    switch (special) {
+      case 'Space':
+        this.textArea.changeValue(' ');
+        break;
+      case 'ContextMenu':
+        this.switchLanguage();
+        break;
+      case 'Enter':
+        this.textArea.changeValue('\n');
+        break;
+      case 'Tab':
+        this.textArea.changeValue('\t');
+        break;
+      case 'Backspace':
+        this.textArea.removeValue();
+        break;
+      case 'Delete':
+        this.textArea.changeValue('Delete');
+        break;
+      case 'ArrowLeft':
+        this.textArea.changeValue('◄');
+        break;
+      case 'ArrowDown':
+        this.textArea.changeValue('▼');
+        break;
+      case 'ArrowRight':
+        this.textArea.changeValue('►');
+        break;
+      case 'ArrowUp':
+        this.textArea.changeValue('▲');
+        break;
+      case 'CapsLock':
+        this.toggleCase();
+        break;
+      case 'ShiftLeft':
+        this.toggleCase();
+        break;
+      default:
+        break;
+    }
+  };
 }

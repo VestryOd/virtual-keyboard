@@ -22,26 +22,24 @@
   background-color: $color-key-hover;
 }
 
-.active,
-.keyboard__key:active,
-.keyboard__key:focus {
-  background-color: $color-key-active;
+.active {
+  background-color: $color-key-active !important;
 }
 
 .special {
   font-size: 1.4rem;
 }
 
-.tab,
 .backspace,
 .capsLock {
   width: 100px;
 }
 
 .shiftRight {
-  width: 110px;
+  width: 112px;
 }
 
+.tab,
 .enter {
   width: 90px;
 }

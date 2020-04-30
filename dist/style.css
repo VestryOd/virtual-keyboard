@@ -571,26 +571,24 @@ body {
   background-color: #dfdfdf;
 }
 
-.active,
-.keyboard__key:active,
-.keyboard__key:focus {
-  background-color: #80c1d1;
+.active {
+  background-color: #80c1d1 !important;
 }
 
 .special {
   font-size: 1.4rem;
 }
 
-.tab,
 .backspace,
 .capsLock {
   width: 100px;
 }
 
 .shiftRight {
-  width: 110px;
+  width: 112px;
 }
 
+.tab,
 .enter {
   width: 90px;
 }
