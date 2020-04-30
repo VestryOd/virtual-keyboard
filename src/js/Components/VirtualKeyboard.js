@@ -2,9 +2,7 @@ import createDomNode from "../createDomNode";
 import { Header } from "./Header";
 import { TextArea } from "./TextArea";
 import { KeyButton } from "./KeyButton";
-/* eslint-disable no-param-reassign */
-/* eslint-disable max-len */
-/* eslint-disable class-methods-use-this */
+
 export class VirtualKeyboard {
   constructor(alphabets, exceptions) {
     this.defaultSet = alphabets;
@@ -18,7 +16,6 @@ export class VirtualKeyboard {
     this.header = null;
     this.pressedButtons = null;
     this.capslocked = false;
-    this.keyboardIsCreated = false;
   }
 
   setRootElement() {
@@ -145,6 +142,8 @@ export class VirtualKeyboard {
     this.addKeyUpListener();
     this.addMouseDownListener();
     this.addMouseUpListener();
+    this.addAnimationTogglerListener();
+    this.addClearTextareaButtonListener();
   }
 
   switchLanguage() {
@@ -172,8 +171,26 @@ export class VirtualKeyboard {
     this.makeTextArea();
     this.generateKeyboard();
     this.pressedButtons = new Set();
-    this.keyboardIsCreated = true;
     this.addListeners();
+  }
+
+  addAnimationTogglerListener() {
+    const animationToggler = document.querySelector('#animation-toggler');
+    const main = document.querySelector('.main');
+    animationToggler.addEventListener('click', (e) => {
+      if (e.target.checked) {
+        main.classList.add('motion-colors');
+      } else {
+        main.classList.remove('motion-colors');
+      }
+    });
+  }
+
+  addClearTextareaButtonListener() {
+    const clearTextareaButton = document.querySelector('.options__clear');
+    clearTextareaButton.addEventListener('click', () => {
+      this.textArea.clearValue();
+    });
   }
 
   handleSymbolDown(target) {

@@ -1,6 +1,3 @@
-/*  <button class="keyboard__key symbol letter" data-code="KeyX" data-ru="ч" data-en="x">
-  <button class="keyboard__key symbol letter sign"
-  data-code="Backquote" data-ru="ё" data-down="`" data-up="~"> */
 const keyValues = [
   {
     code: 'Backquote',

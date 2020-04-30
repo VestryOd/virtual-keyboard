@@ -10,6 +10,7 @@ export class TextArea {
     wrapper.classList.add('textarea-wrapper');
     const textArea = createDomNode(textArea, 'textarea', 'textarea');
     textArea.setAttribute('id', 'textarea');
+    textArea.setAttribute('placeholder', 'Start typing to get started...');
     textArea.setAttribute('autofocus', true);
     this.textArea = textArea;
     wrapper.append(textArea);

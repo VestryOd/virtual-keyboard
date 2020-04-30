@@ -14,7 +14,28 @@
   @extend %thin-text-shadow;
 }
 
-.info__lang-switch {
+.options__wrapper,
+.checbox__wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.checbox__wrapper {
+  margin: 0 10px;
+}
+
+.checbox__wrapper label {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.checbox__wrapper label,
+.checbox__wrapper input {
+  color: $color-light;
+  @extend %thin-text-shadow;
+}
+
+.options__clear {
   padding: 5px 20px;
   border-radius: 10px;
   border: 1px solid transparent;
@@ -26,12 +47,12 @@
   @extend %transition;
 }
 
-.info__lang-switch:hover {
+.options__clear:hover {
   background-color: $color-lang-switch-hover;
   @extend %thin-text-shadow;
 }
 
-.info__lang-switch:active,
-.info__lang-switch:focus {
+.options__clear:active,
+.options__clear:focus {
   border-color: $color-light;
 }

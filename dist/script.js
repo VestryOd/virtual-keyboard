@@ -9831,18 +9831,52 @@ var Header = /*#__PURE__*/function () {
   }
 
   _createClass(Header, [{
-    key: "generateHeader",
-    value: function generateHeader() {
-      var header__wrapper = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(header__wrapper, 'div', 'header__wrapper');
+    key: "generateCheckbox",
+    value: function generateCheckbox() {
+      var checboxWrapper = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(checboxWrapper, 'div', 'checbox__wrapper');
+      checboxWrapper.innerHTML = "<label for=\"animation-toggler\">Animate </label>\n                                <input type = \"checkbox\" id = \"animation-toggler\" />";
+      return checboxWrapper;
+    }
+  }, {
+    key: "generateTitle",
+    value: function generateTitle() {
       var header = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(header, 'h1', 'header');
       header.innerHTML = 'RS-School task Virtual Keyboard';
+      return header;
+    }
+  }, {
+    key: "generateDescription",
+    value: function generateDescription() {
       var description__wrapper = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(description__wrapper, 'div', 'description__wrapper');
       var description = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(description, 'div', 'info');
       description.innerHTML = 'Created on Win OS / lang switch: left Ctrl + Alt or globe icon';
-      var langSwitch = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(langSwitch, 'button', 'info__lang-switch');
-      langSwitch.innerHTML = 'Clear';
-      description__wrapper.append(description, langSwitch);
-      header__wrapper.append(header, description__wrapper);
+      var options = this.generateOptions();
+      description__wrapper.append(description, options);
+      return description__wrapper;
+    }
+  }, {
+    key: "generateOptions",
+    value: function generateOptions() {
+      var optionsWrapper = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(optionsWrapper, 'div', 'options__wrapper');
+      var checkBox = this.generateCheckbox();
+      var clearTextareaButton = this.generateClearTextareaButton();
+      optionsWrapper.append(checkBox, clearTextareaButton);
+      return optionsWrapper;
+    }
+  }, {
+    key: "generateClearTextareaButton",
+    value: function generateClearTextareaButton() {
+      var clearTextareaButton = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(clearTextareaButton, 'button', 'options__clear');
+      clearTextareaButton.innerHTML = 'Clear';
+      return clearTextareaButton;
+    }
+  }, {
+    key: "generateHeader",
+    value: function generateHeader() {
+      var header__wrapper = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(header__wrapper, 'div', 'header__wrapper');
+      var header = this.generateTitle();
+      var description = this.generateDescription();
+      header__wrapper.append(header, description);
       return header__wrapper;
     }
   }]);
@@ -10002,6 +10036,7 @@ var TextArea = /*#__PURE__*/function () {
       wrapper.classList.add('textarea-wrapper');
       var textArea = Object(_createDomNode__WEBPACK_IMPORTED_MODULE_0__["default"])(textArea, 'textarea', 'textarea');
       textArea.setAttribute('id', 'textarea');
+      textArea.setAttribute('placeholder', 'Start typing to get started...');
       textArea.setAttribute('autofocus', true);
       this.textArea = textArea;
       wrapper.append(textArea);
@@ -10063,12 +10098,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
-/* eslint-disable no-param-reassign */
-
-/* eslint-disable max-len */
-
-/* eslint-disable class-methods-use-this */
-
 var VirtualKeyboard = /*#__PURE__*/function () {
   function VirtualKeyboard(alphabets, exceptions) {
     _classCallCheck(this, VirtualKeyboard);
@@ -10084,7 +10113,6 @@ var VirtualKeyboard = /*#__PURE__*/function () {
     this.header = null;
     this.pressedButtons = null;
     this.capslocked = false;
-    this.keyboardIsCreated = false;
   }
 
   _createClass(VirtualKeyboard, [{
@@ -10252,6 +10280,8 @@ var VirtualKeyboard = /*#__PURE__*/function () {
       this.addKeyUpListener();
       this.addMouseDownListener();
       this.addMouseUpListener();
+      this.addAnimationTogglerListener();
+      this.addClearTextareaButtonListener();
     }
   }, {
     key: "switchLanguage",
@@ -10294,8 +10324,30 @@ var VirtualKeyboard = /*#__PURE__*/function () {
       this.makeTextArea();
       this.generateKeyboard();
       this.pressedButtons = new Set();
-      this.keyboardIsCreated = true;
       this.addListeners();
+    }
+  }, {
+    key: "addAnimationTogglerListener",
+    value: function addAnimationTogglerListener() {
+      var animationToggler = document.querySelector('#animation-toggler');
+      var main = document.querySelector('.main');
+      animationToggler.addEventListener('click', function (e) {
+        if (e.target.checked) {
+          main.classList.add('motion-colors');
+        } else {
+          main.classList.remove('motion-colors');
+        }
+      });
+    }
+  }, {
+    key: "addClearTextareaButtonListener",
+    value: function addClearTextareaButtonListener() {
+      var _this6 = this;
+
+      var clearTextareaButton = document.querySelector('.options__clear');
+      clearTextareaButton.addEventListener('click', function () {
+        _this6.textArea.clearValue();
+      });
     }
   }, {
     key: "handleSymbolDown",
@@ -10420,9 +10472,6 @@ function createDomNode(node, element) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/*  <button class="keyboard__key symbol letter" data-code="KeyX" data-ru="ч" data-en="x">
-  <button class="keyboard__key symbol letter sign"
-  data-code="Backquote" data-ru="ё" data-down="`" data-up="~"> */
 var keyValues = [{
   code: 'Backquote',
   value: {
