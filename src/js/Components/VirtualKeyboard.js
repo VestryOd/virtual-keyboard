@@ -1,6 +1,7 @@
 import createDomNode from "../createDomNode";
 import { Header } from "./Header";
 import { TextArea } from "./TextArea";
+import { KeyButton } from "./KeyButton";
 /* eslint-disable no-param-reassign */
 /* eslint-disable max-len */
 /* eslint-disable class-methods-use-this */
@@ -46,45 +47,44 @@ export class VirtualKeyboard {
     const data = this.defaultSet;
     this.keyBoard = createDomNode(this.keyBoard, 'div', 'keyboard');
     data.forEach((elem) => {
-      this.keyBoard.append(this.generateKeyboardButton(elem));
+      let keyButton = new KeyButton(elem).makeKeyButton();
+      elem.classes.includes('letter') ? this.letters.push(keyButton) : this.digits.push(keyButton);
+      this.keyBoard.append(keyButton);
     });
     this.rootElement.append(this.keyBoard);
   }
 
   // eslint-disable-next-line class-methods-use-this
-  generateKeyboardButton(obj) {
+  // generateKeyboardButton(obj) {
+  //   let button = null;
+  //   button = createDomNode(button, 'button', 'keyboard__key', ...obj.classes);
+  //   button.setAttribute('type', 'button');
+  //   button.setAttribute('data-code', obj.code);
 
+  //   button = obj.value ? this.createSpecialButton(button, obj) : this.createSymbolButton(button, obj, 'down');
+  //   const { ru, en } = obj;
+  //   if (ru.down) btn.setAttribute('data-ru', ru.down);
+  //   if (en.down) btn.setAttribute('data-en', en.down);
+  //   btn = this.setButtonValue(btn, obj);
+  //   return btn;
+  //   this.setButtonValue(btn);
+  //   return button;
+  // }
 
-    let button = null;
-    button = createDomNode(button, 'button', 'keyboard__key', ...obj.classes);
-    button.setAttribute('type', 'button');
-    button.setAttribute('data-code', obj.code);
+  // createSpecialButton(button, obj) {
+  //   button.innerHTML = obj.value;
+  //   return button;
+  // }
 
-    button = obj.value ? this.createSpecialButton(button, obj) : this.createSymbolButton(button, obj, 'down');
-    // const { ru, en } = obj;
-    // if (ru.down) btn.setAttribute('data-ru', ru.down);
-    // if (en.down) btn.setAttribute('data-en', en.down);
-    // btn = this.setButtonValue(btn, obj);
-    // return btn;
-    // this.setButtonValue(btn);
-    return button;
-  }
+  // createSymbolButton(button, obj, letterCase) {
+  //   console.log('symbol', obj);
+  //   const lang = localStorage.getItem('keyboardLanguage');
+  //   const langObject = obj[lang];
+  //   console.log(lang);
 
-  createSpecialButton(button, obj) {
-    console.log('special', obj);
-    button.innerHTML = obj.value;
-    return button;
-  }
-
-  createSymbolButton(button, obj, letterCase) {
-    console.log('symbol', obj);
-    const lang = localStorage.getItem('keyboardLanguage');
-    const langObject = obj[lang];
-    console.log(lang);
-
-    button.innerHTML = langObject[letterCase];
-    return button;
-  }
+  //   button.innerHTML = langObject[letterCase];
+  //   return button;
+  // }
 
   // setButtonValue(btn, obj) {
   //   return obj.classes.includes('special') ? this.specialkey(btn, obj) : this.simpleKey(btn, obj);

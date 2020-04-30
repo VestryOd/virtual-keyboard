@@ -457,6 +457,7 @@ body {
 .main {
   width: 100%;
   height: 100vh;
+  background: linear-gradient(270deg, #8364b7, #3096db, #90bbdd, #bae1ea);
 }
 
 .container {
@@ -570,6 +571,7 @@ body {
   background-color: #dfdfdf;
 }
 
+.active,
 .keyboard__key:active,
 .keyboard__key:focus {
   background-color: #80c1d1;
@@ -616,60 +618,6 @@ body {
 
 .contextMenu {
   background-image: url("/assets/img/globe.svg");
-}
-
-.motion-colors {
-  background: linear-gradient(270deg, #8364b7, #3096db, #90bbdd, #bae1ea);
-  background-size: 800% 800%;
-  -webkit-animation: motion-gradient 29s ease infinite;
-  -moz-animation: motion-gradient 29s ease infinite;
-  -o-animation: motion-gradient 29s ease infinite;
-  animation: motion-gradient 29s ease infinite;
-}
-
-@-webkit-keyframes motion-gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-@-moz-keyframes motion-gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-@-o-keyframes motion-gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-@keyframes motion-gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
 }
 
 /*# sourceMappingURL=style.css.map*/
